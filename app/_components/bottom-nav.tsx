@@ -12,7 +12,7 @@ import { getHomeData } from "@/app/_lib/api/fetch-generated";
 import { cn } from "@/lib/utils";
 
 interface BottomNavProps {
-  activePage?: "home" | "calendar";
+  activePage?: "home" | "calendar" | "stats";
 }
 
 export async function BottomNav({ activePage = "home" }: BottomNavProps) {
@@ -30,7 +30,7 @@ export async function BottomNav({ activePage = "home" }: BottomNavProps) {
         <House
           className={cn(
             "size-6",
-            activePage === "home" ? "text-foreground" : "text-muted-foreground"
+            activePage === "home" ? "text-foreground" : "text-muted-foreground",
           )}
         />
       </Link>
@@ -41,7 +41,7 @@ export async function BottomNav({ activePage = "home" }: BottomNavProps) {
               "size-6",
               activePage === "calendar"
                 ? "text-foreground"
-                : "text-muted-foreground"
+                : "text-muted-foreground",
             )}
           />
         </Link>
@@ -52,7 +52,7 @@ export async function BottomNav({ activePage = "home" }: BottomNavProps) {
               "size-6",
               activePage === "calendar"
                 ? "text-foreground"
-                : "text-muted-foreground"
+                : "text-muted-foreground",
             )}
           />
         </button>
@@ -60,9 +60,16 @@ export async function BottomNav({ activePage = "home" }: BottomNavProps) {
       <button className="rounded-full bg-primary p-4">
         <Sparkles className="size-6 text-primary-foreground" />
       </button>
-      <button className="p-3">
-        <ChartNoAxesColumn className="size-6 text-muted-foreground" />
-      </button>
+      <Link href="/stats" className="p-3">
+        <ChartNoAxesColumn
+          className={cn(
+            "size-6",
+            activePage === "stats"
+              ? "text-foreground"
+              : "text-muted-foreground",
+          )}
+        />
+      </Link>
       <button className="p-3">
         <UserRound className="size-6 text-muted-foreground" />
       </button>
