@@ -11,16 +11,16 @@ export default function AuthPage() {
   if (isPending) return null;
   if (session) redirect("/");
 
-  const handleGoogleLogin = async () => {
-    const { error } = await authClient.signIn.social({
-      provider: "google",
-      callbackURL: `${process.env.NEXT_PUBLIC_BASE_URL}/`,
-    });
+   const handleGoogleLogin = async () => {
+     const { error } = await authClient.signIn.social({
+       provider: "google",
+       callbackURL: `${process.env.NEXT_PUBLIC_BASE_URL}/`,
+     });
 
-    if (error) {
-      console.error(error.message);
-    }
-  };
+     if (error) {
+       console.error(error.message);
+     }
+   };
 
   return (
     <div className="relative flex min-h-svh flex-col bg-black">
