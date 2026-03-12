@@ -1,3 +1,4 @@
+//bootcamp-treinos-frontend/app/_components/chat.tsx
 "use client";
 
 import { useEffect, useRef } from "react";

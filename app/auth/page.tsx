@@ -1,3 +1,4 @@
+//bootcamp-treinos-frontend/app/auth/page.tsx
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { authClient } from "@/app/_lib/auth-client";

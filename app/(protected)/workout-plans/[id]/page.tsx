@@ -1,3 +1,4 @@
+//bootcamp-treinos-frontend/app/(protected)/workout-plans/[id]/page.tsx
 import { redirect } from "next/navigation";
 import { authClient } from "@/app/_lib/auth-client";
 import { headers } from "next/headers";

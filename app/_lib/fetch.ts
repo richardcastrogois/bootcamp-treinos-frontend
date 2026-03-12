@@ -1,38 +1,42 @@
 import { cookies } from "next/headers";
 
-const getBody = <T>(c: Response | Request): Promise<T> => {
-  return c.json() as Promise<T>;
+const getBody = async <T>(response: Response): Promise<T> => {
+  return response.json() as Promise<T>;
 };
 
 const getUrl = (contextUrl: string): string => {
-  const newUrl = new URL(`${process.env.NEXT_PUBLIC_API_URL}${contextUrl}`);
-  const requestUrl = new URL(`${newUrl}`);
-  return requestUrl.toString();
+  const newUrl = new URL(contextUrl, process.env.NEXT_PUBLIC_API_URL);
+  return newUrl.toString();
 };
 
 const getHeaders = async (headers?: HeadersInit): Promise<HeadersInit> => {
-  const _cookies = await cookies();
+  const cookieStore = await cookies();
+
   return {
     ...headers,
-    cookie: _cookies.toString(),
+    cookie: cookieStore.toString(),
   };
 };
 
+type ExtractResponseData<T> = T extends { data: infer Data } ? Data : never;
+
 export const customFetch = async <T>(
   url: string,
-  options: RequestInit,
+  options: RequestInit = {},
 ): Promise<T> => {
   const requestUrl = getUrl(url);
   const requestHeaders = await getHeaders(options.headers);
 
-  const requestInit: RequestInit = {
+  const response = await fetch(requestUrl, {
     ...options,
     headers: requestHeaders,
-    credentials: "include",
-  };
+  });
 
-  const response = await fetch(requestUrl, requestInit);
-  const data = await getBody<T>(response);
+  const data = await getBody<ExtractResponseData<T>>(response);
 
-  return { status: response.status, data, headers: response.headers } as T;
+  return {
+    status: response.status,
+    data,
+    headers: response.headers,
+  } as T;
 };

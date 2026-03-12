@@ -1,3 +1,4 @@
+//bootcamp-treinos-frontend/app/(protected)/profile/page.tsx
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { authClient } from "@/app/_lib/auth-client";
@@ -41,7 +42,7 @@ export default async function ProfilePage() {
 
   return (
     <div className="flex min-h-svh flex-col bg-background pb-24">
-      <div className="flex h-14] items-center px-5">
+      <div className="flex h-14 items-center px-5">
         <p
           className="text-[22px] uppercase leading-[1.15] text-foreground"
           style={{ fontFamily: "var(--font-anton)" }}

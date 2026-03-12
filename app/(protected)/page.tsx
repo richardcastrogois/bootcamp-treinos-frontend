@@ -1,14 +1,15 @@
+//bootcamp-treinos-frontend/app/page.tsx
 import { redirect } from "next/navigation";
 import { authClient } from "@/app/_lib/auth-client";
 import { headers } from "next/headers";
-import { getHomeData, getUserTrainData } from "./_lib/api/fetch-generated";
+import { getHomeData, getUserTrainData } from "@/app/_lib/api/fetch-generated";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import { Flame } from "lucide-react";
-import { BottomNav } from "./_components/bottom-nav";
-import { ConsistencyTracker } from "./_components/consistency-tracker";
-import { WorkoutDayCard } from "./_components/workout-day-card";
+import { BottomNav } from "@/app/_components/bottom-nav";
+import { ConsistencyTracker } from "@/app/_components/consistency-tracker";
+import { WorkoutDayCard } from "@/app/_components/workout-day-card";
 
 export default async function Home() {
   const session = await authClient.getSession({
