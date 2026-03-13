@@ -1,48 +1,27 @@
-//bootcamp-treinos-frontend/app/(protected)/stats/page.tsx
-import { redirect } from "next/navigation";
-import { authClient } from "@/app/_lib/auth-client";
-import { headers } from "next/headers";
-import {
-  getStats,
-  getHomeData,
-  getUserTrainData,
-} from "@/app/_lib/api/fetch-generated";
 import dayjs from "dayjs";
 import { CircleCheck, CirclePercent, Hourglass } from "lucide-react";
 import { BottomNav } from "@/app/_components/bottom-nav";
+import { getStats } from "@/app/_lib/api/fetch-generated";
 import { StreakBanner } from "./_components/streak-banner";
 import { StatsHeatmap } from "./_components/stats-heatmap";
 import { StatCard } from "./_components/stat-card";
+import { getProtectedBootstrap } from "../_lib/get-protected-bootstrap";
 
 function formatTotalTime(totalSeconds: number): string {
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
+
   return `${hours}h${minutes.toString().padStart(2, "0")}m`;
 }
 
 export default async function StatsPage() {
-  const session = await authClient.getSession({
-    fetchOptions: {
-      headers: await headers(),
-    },
-  });
-
-  if (!session.data?.user) redirect("/auth");
+  await getProtectedBootstrap();
 
   const today = dayjs();
   const from = today.subtract(2, "month").startOf("month").format("YYYY-MM-DD");
   const to = today.endOf("month").format("YYYY-MM-DD");
 
-  const [statsResponse, homeData, trainData] = await Promise.all([
-    getStats({ from, to }),
-    getHomeData(today.format("YYYY-MM-DD")),
-    getUserTrainData(),
-  ]);
-
-  const needsOnboarding =
-    (homeData.status === 200 && !homeData.data.activeWorkoutPlanId) ||
-    (trainData.status === 200 && !trainData.data);
-  if (needsOnboarding) redirect("/onboarding");
+  const statsResponse = await getStats({ from, to });
 
   if (statsResponse.status !== 200) {
     throw new Error("Failed to fetch stats");
@@ -84,6 +63,7 @@ export default async function StatsPage() {
             value={String(completedWorkoutsCount)}
             label="Treinos Feitos"
           />
+
           <StatCard
             icon={CirclePercent}
             value={`${Math.round(conclusionRate * 100)}%`}

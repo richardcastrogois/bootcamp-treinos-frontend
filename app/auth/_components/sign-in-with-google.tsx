@@ -19,13 +19,13 @@ export const SignInWithGoogle = () => {
   return (
     <Button
       onClick={handleGoogleLogin}
-      className="h-9.5 rounded-full bg-white px-6 text-black hover:bg-white/90"
+      className="h-12 rounded-2xl bg-zinc-200 px-6 text-black text-base hover:bg-white/90"
     >
       <Image
         src="/google-icon.svg"
         alt=""
-        width={16}
-        height={16}
+        width={19}
+        height={19}
         className="shrink-0"
       />
       Fazer login com Google

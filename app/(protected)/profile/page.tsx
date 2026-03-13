@@ -1,44 +1,16 @@
-//bootcamp-treinos-frontend/app/(protected)/profile/page.tsx
-import { redirect } from "next/navigation";
-import { headers } from "next/headers";
-import { authClient } from "@/app/_lib/auth-client";
-import { getUserTrainData, getHomeData } from "@/app/_lib/api/fetch-generated";
-import dayjs from "dayjs";
 import { BottomNav } from "@/app/_components/bottom-nav";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Weight, Ruler, BicepsFlexed, User } from "lucide-react";
 import { LogoutButton } from "./_components/logout-button";
+import { getProtectedBootstrap } from "../_lib/get-protected-bootstrap";
 
 export default async function ProfilePage() {
-  const session = await authClient.getSession({
-    fetchOptions: {
-      headers: await headers(),
-    },
-  });
+  const { user, trainData } = await getProtectedBootstrap();
 
-  if (!session.data?.user) redirect("/auth");
-
-  const [trainData, homeData] = await Promise.all([
-    getUserTrainData(),
-    getHomeData(dayjs().format("YYYY-MM-DD")),
-  ]);
-
-  if (trainData.status !== 200) {
-    throw new Error("Failed to fetch user train data");
-  }
-
-  const needsOnboarding =
-    (homeData.status === 200 && !homeData.data.activeWorkoutPlanId) ||
-    !trainData.data;
-  if (needsOnboarding) redirect("/onboarding");
-  
-  const user = session.data.user;
-  const data = trainData.data;
-
-  const weightInKg = data ? data.weightInGrams / 1000 : null;
-  const heightInCm = data?.heightInCentimeters ?? null;
-  const bodyFatPercentage = data?.bodyFatPercentage ?? null;
-  const age = data?.age ?? null;
+  const weightInKg = trainData.weightInGrams / 1000;
+  const heightInCm = trainData.heightInCentimeters;
+  const bodyFatPercentage = trainData.bodyFatPercentage;
+  const age = trainData.age;
 
   return (
     <div className="flex min-h-svh flex-col bg-background pb-24">
@@ -60,6 +32,7 @@ export default async function ProfilePage() {
                 {user.name?.charAt(0)?.toUpperCase()}
               </AvatarFallback>
             </Avatar>
+
             <div className="flex flex-col gap-1.5">
               <h1 className="font-heading text-lg font-semibold leading-[1.05] text-foreground">
                 {user.name}
@@ -78,7 +51,7 @@ export default async function ProfilePage() {
             </div>
             <div className="flex flex-col items-center gap-1.5">
               <span className="font-heading text-2xl font-semibold leading-[1.15] text-foreground">
-                {weightInKg ?? "-"}
+                {weightInKg}
               </span>
               <span className="font-heading text-xs uppercase leading-[1.4] text-muted-foreground">
                 Kg
@@ -92,7 +65,7 @@ export default async function ProfilePage() {
             </div>
             <div className="flex flex-col items-center gap-1.5">
               <span className="font-heading text-2xl font-semibold leading-[1.15] text-foreground">
-                {heightInCm ?? "-"}
+                {heightInCm}
               </span>
               <span className="font-heading text-xs uppercase leading-[1.4] text-muted-foreground">
                 Cm
@@ -106,7 +79,7 @@ export default async function ProfilePage() {
             </div>
             <div className="flex flex-col items-center gap-1.5">
               <span className="font-heading text-2xl font-semibold leading-[1.15] text-foreground">
-                {bodyFatPercentage != null ? `${bodyFatPercentage}%` : "-"}
+                {bodyFatPercentage}%
               </span>
               <span className="font-heading text-xs uppercase leading-[1.4] text-muted-foreground">
                 Gc
@@ -120,7 +93,7 @@ export default async function ProfilePage() {
             </div>
             <div className="flex flex-col items-center gap-1.5">
               <span className="font-heading text-2xl font-semibold leading-[1.15] text-foreground">
-                {age ?? "-"}
+                {age}
               </span>
               <span className="font-heading text-xs uppercase leading-[1.4] text-muted-foreground">
                 Anos

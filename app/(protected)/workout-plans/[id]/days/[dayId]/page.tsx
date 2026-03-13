@@ -1,20 +1,14 @@
 import { redirect } from "next/navigation";
-import { authClient } from "@/app/_lib/auth-client";
-import { headers } from "next/headers";
-import {
-  getWorkoutDay,
-  getHomeData,
-  getUserTrainData,
-} from "@/app/_lib/api/fetch-generated";
-import dayjs from "dayjs";
 import Image from "next/image";
 import { Calendar, Timer, Dumbbell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BottomNav } from "@/app/_components/bottom-nav";
+import { getWorkoutDay } from "@/app/_lib/api/fetch-generated";
 import { BackButton } from "./_components/back-button";
 import { ExerciseCard } from "./_components/exercise-card";
 import { StartWorkoutButton } from "./_components/start-workout-button";
 import { CompleteWorkoutButton } from "./_components/complete-workout-button";
+import { getProtectedBootstrap } from "../../../../_lib/get-protected-bootstrap";
 
 const WEEKDAY_LABELS: Record<string, string> = {
   MONDAY: "SEGUNDA",
@@ -41,27 +35,14 @@ export default async function WorkoutDayPage({
 }: {
   params: Promise<{ id: string; dayId: string }>;
 }) {
-  const session = await authClient.getSession({
-    fetchOptions: {
-      headers: await headers(),
-    },
-  });
-
-  if (!session.data?.user) redirect("/auth");
+  await getProtectedBootstrap();
 
   const { id: workoutPlanId, dayId } = await params;
-  const [workoutDayData, homeData, trainData] = await Promise.all([
-    getWorkoutDay(workoutPlanId, dayId),
-    getHomeData(dayjs().format("YYYY-MM-DD")),
-    getUserTrainData(),
-  ]);
+  const workoutDayData = await getWorkoutDay(workoutPlanId, dayId);
 
-  const needsOnboarding =
-    (homeData.status === 200 && !homeData.data.activeWorkoutPlanId) ||
-    (trainData.status === 200 && !trainData.data);
-  if (needsOnboarding) redirect("/onboarding");
-
-  if (workoutDayData.status !== 200) redirect("/");
+  if (workoutDayData.status !== 200) {
+    redirect("/");
+  }
 
   const {
     name,
@@ -75,9 +56,10 @@ export default async function WorkoutDayPage({
   const durationInMinutes = Math.round(estimatedDurationInSeconds / 60);
 
   const inProgressSession = sessions.find(
-    (s) => s.startedAt && !s.completedAt,
+    (session) => session.startedAt && !session.completedAt,
   );
-  const completedSession = sessions.find((s) => s.completedAt);
+  const completedSession = sessions.find((session) => session.completedAt);
+
   const hasInProgressSession = !!inProgressSession;
   const hasCompletedSession = !!completedSession;
 
@@ -85,11 +67,13 @@ export default async function WorkoutDayPage({
     <div className="flex min-h-svh flex-col bg-background pb-24">
       <div className="flex items-center justify-between px-5 py-4">
         <BackButton />
+
         <h1 className="font-heading text-lg font-semibold text-foreground">
           {hasInProgressSession || hasCompletedSession
             ? "Treino de Hoje"
             : WEEKDAY_TITLE_LABELS[weekDay]}
         </h1>
+
         <div className="size-6" />
       </div>
 
@@ -103,6 +87,7 @@ export default async function WorkoutDayPage({
               className="pointer-events-none object-cover"
             />
           )}
+
           <div className="absolute inset-0 bg-foreground/40" />
 
           <div className="relative">
@@ -119,6 +104,7 @@ export default async function WorkoutDayPage({
               <h2 className="font-heading text-2xl font-semibold leading-[1.05] text-background">
                 {name}
               </h2>
+
               <div className="flex items-start gap-2">
                 <div className="flex items-center gap-1">
                   <Timer className="size-3.5 text-background/70" />
@@ -126,6 +112,7 @@ export default async function WorkoutDayPage({
                     {durationInMinutes}min
                   </span>
                 </div>
+
                 <div className="flex items-center gap-1">
                   <Dumbbell className="size-3.5 text-background/70" />
                   <span className="font-heading text-xs text-background/70">
@@ -141,6 +128,7 @@ export default async function WorkoutDayPage({
                 workoutDayId={dayId}
               />
             )}
+
             {hasCompletedSession && (
               <Button
                 variant="ghost"

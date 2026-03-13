@@ -1,20 +1,13 @@
-//bootcamp-treinos-frontend/app/(protected)/workout-plans/[id]/page.tsx
 import { redirect } from "next/navigation";
-import { authClient } from "@/app/_lib/auth-client";
-import { headers } from "next/headers";
-import {
-  getWorkoutPlan,
-  getHomeData,
-  getUserTrainData,
-} from "@/app/_lib/api/fetch-generated";
-import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import { Goal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { BottomNav } from "@/app/_components/bottom-nav";
+import { getWorkoutPlan } from "@/app/_lib/api/fetch-generated";
 import { WorkoutDayCard } from "@/app/_components/workout-day-card";
 import { RestDayCard } from "./_components/rest-day-card";
+import { getProtectedBootstrap } from "../../_lib/get-protected-bootstrap";
 
 const WEEKDAY_ORDER = [
   "MONDAY",
@@ -31,27 +24,14 @@ export default async function WorkoutPlanPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const session = await authClient.getSession({
-    fetchOptions: {
-      headers: await headers(),
-    },
-  });
-
-  if (!session.data?.user) redirect("/auth");
+  await getProtectedBootstrap();
 
   const { id } = await params;
-  const [workoutPlanData, homeData, trainData] = await Promise.all([
-    getWorkoutPlan(id),
-    getHomeData(dayjs().format("YYYY-MM-DD")),
-    getUserTrainData(),
-  ]);
+  const workoutPlanData = await getWorkoutPlan(id);
 
-  const needsOnboarding =
-    (homeData.status === 200 && !homeData.data.activeWorkoutPlanId) ||
-    (trainData.status === 200 && !trainData.data);
-  if (needsOnboarding) redirect("/onboarding");
-
-  if (workoutPlanData.status !== 200) redirect("/");
+  if (workoutPlanData.status !== 200) {
+    redirect("/");
+  }
 
   const { name, workoutDays } = workoutPlanData.data;
 
@@ -93,6 +73,7 @@ export default async function WorkoutPlanPage({
               <Goal className="size-4" />
               {name}
             </Badge>
+
             <h1 className="font-heading text-2xl font-semibold leading-[1.05] text-background">
               Plano de Treino
             </h1>

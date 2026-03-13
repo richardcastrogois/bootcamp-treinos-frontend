@@ -1,42 +1,18 @@
-//bootcamp-treinos-frontend/app/page.tsx
-import { redirect } from "next/navigation";
-import { authClient } from "@/app/_lib/auth-client";
-import { headers } from "next/headers";
-import { getHomeData, getUserTrainData } from "@/app/_lib/api/fetch-generated";
-import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
+import dayjs from "dayjs";
 import { Flame } from "lucide-react";
 import { BottomNav } from "@/app/_components/bottom-nav";
 import { ConsistencyTracker } from "@/app/_components/consistency-tracker";
 import { WorkoutDayCard } from "@/app/_components/workout-day-card";
+import { getProtectedBootstrap } from "./_lib/get-protected-bootstrap";
 
-export default async function Home() {
-  const session = await authClient.getSession({
-    fetchOptions: {
-      headers: await headers(),
-    },
-  });
-
-  if (!session.data?.user) redirect("/auth");
+export default async function HomePage() {
+  const { user, homeData } = await getProtectedBootstrap();
 
   const today = dayjs();
-  const [homeData, trainData] = await Promise.all([
-    getHomeData(today.format("YYYY-MM-DD")),
-    getUserTrainData(),
-  ]);
-
-  if (homeData.status !== 200) {
-    throw new Error("Failed to fetch home data");
-  }
-
-  const needsOnboarding =
-    !homeData.data.activeWorkoutPlanId ||
-    (trainData.status === 200 && !trainData.data);
-  if (needsOnboarding) redirect("/onboarding");
-
-  const { todayWorkoutDay, workoutStreak, consistencyByDay } = homeData.data;
-  const userName = session.data.user.name?.split(" ")[0] ?? "";
+  const { todayWorkoutDay, workoutStreak, consistencyByDay } = homeData;
+  const userName = user.name?.split(" ")[0] ?? "";
 
   return (
     <div className="flex min-h-svh flex-col bg-background pb-24">
@@ -74,6 +50,7 @@ export default async function Home() {
               Bora treinar hoje?
             </p>
           </div>
+
           <div className="rounded-full bg-primary px-4 py-2">
             <span className="font-heading text-sm font-semibold text-primary-foreground">
               Bora!
@@ -87,7 +64,7 @@ export default async function Home() {
           <h2 className="font-heading text-lg font-semibold text-foreground">
             Consistência
           </h2>
-          <button className="font-heading text-xs text-primary">
+          <button className="font-heading text-xs text-primary" type="button">
             Ver histórico
           </button>
         </div>
@@ -99,6 +76,7 @@ export default async function Home() {
               today={today}
             />
           </div>
+
           <div className="flex items-center gap-2 self-stretch rounded-xl bg-streak px-5 py-2">
             <Flame className="size-5 text-streak-foreground" />
             <span className="font-heading text-base font-semibold text-foreground">
@@ -114,7 +92,7 @@ export default async function Home() {
             <h2 className="font-heading text-lg font-semibold text-foreground">
               Treino de Hoje
             </h2>
-            <button className="font-heading text-xs text-primary">
+            <button className="font-heading text-xs text-primary" type="button">
               Ver treinos
             </button>
           </div>
@@ -135,7 +113,7 @@ export default async function Home() {
         </div>
       )}
 
-      <BottomNav />
+      <BottomNav activePage="home" />
     </div>
   );
 }
