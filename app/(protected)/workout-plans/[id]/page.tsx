@@ -1,10 +1,9 @@
-//frontend/app/(protected)/workout-plans/[id]/page.tsx
+// frontend/app/(protected)/workout-plans/[id]/page.tsx
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Goal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { BottomNav } from "@/app/_components/bottom-nav";
 import { getWorkoutPlan } from "@/app/_lib/api/fetch-generated";
 import { WorkoutDayCard } from "@/app/_components/workout-day-card";
 import { RestDayCard } from "./_components/rest-day-card";
@@ -42,7 +41,7 @@ export default async function WorkoutPlanPage({
   );
 
   return (
-    <div className="flex min-h-svh flex-col bg-background pb-24">
+    <div className="flex min-h-svh flex-col bg-background pb-32">
       <div className="relative flex h-74 shrink-0 flex-col items-start justify-between overflow-hidden rounded-b-4xl px-5 pb-10 pt-5">
         <div className="absolute inset-0" aria-hidden="true">
           <Image
@@ -99,8 +98,6 @@ export default async function WorkoutPlanPage({
           ),
         )}
       </div>
-
-      <BottomNav activePage="calendar" />
     </div>
   );
 }

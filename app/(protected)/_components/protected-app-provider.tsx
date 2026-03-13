@@ -1,3 +1,4 @@
+//frontend/app/(protected)/_components/protected-app-provider.tsx
 "use client";
 
 import { createContext, useContext } from "react";

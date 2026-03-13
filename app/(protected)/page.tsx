@@ -1,9 +1,8 @@
-//frontend/app/(protected)/page.tsx
+// frontend/app/(protected)/page.tsx
 import Image from "next/image";
 import Link from "next/link";
 import dayjs from "dayjs";
 import { Flame } from "lucide-react";
-import { BottomNav } from "@/app/_components/bottom-nav";
 import { ConsistencyTracker } from "@/app/_components/consistency-tracker";
 import { WorkoutDayCard } from "@/app/_components/workout-day-card";
 import { getProtectedBootstrap } from "./_lib/get-protected-bootstrap";
@@ -16,7 +15,7 @@ export default async function HomePage() {
   const userName = user.name?.split(" ")[0] ?? "";
 
   return (
-    <div className="flex min-h-svh flex-col bg-background pb-24">
+    <div className="flex min-h-svh flex-col bg-background pb-32">
       <div className="relative flex h-74 shrink-0 flex-col items-start justify-between overflow-hidden rounded-b-4xl px-5 pb-10 pt-5">
         <div className="absolute inset-0" aria-hidden="true">
           <Image
@@ -113,8 +112,6 @@ export default async function HomePage() {
           </Link>
         </div>
       )}
-
-      <BottomNav activePage="home" />
     </div>
   );
 }

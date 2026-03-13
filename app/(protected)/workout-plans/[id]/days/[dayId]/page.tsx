@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import Image from "next/image";
 import { Calendar, Timer, Dumbbell } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { BottomNav } from "@/app/_components/bottom-nav";
 import { getWorkoutDay } from "@/app/_lib/api/fetch-generated";
 import { BackButton } from "./_components/back-button";
 import { ExerciseCard } from "./_components/exercise-card";
@@ -65,7 +64,7 @@ export default async function WorkoutDayPage({
   const hasCompletedSession = !!completedSession;
 
   return (
-    <div className="flex min-h-svh flex-col bg-background pb-24">
+    <div className="flex min-h-svh flex-col bg-background pb-32">
       <div className="flex items-center justify-between px-5 py-4">
         <BackButton />
 
@@ -160,8 +159,6 @@ export default async function WorkoutDayPage({
           />
         </div>
       )}
-
-      <BottomNav activePage="calendar" />
     </div>
   );
 }

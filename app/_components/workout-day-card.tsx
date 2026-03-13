@@ -1,3 +1,4 @@
+// frontend/app/_components/workout-day-card.tsx
 import Image from "next/image";
 import { Calendar, Timer, Dumbbell } from "lucide-react";
 import type { GetHomeData200TodayWorkoutDayWeekDay } from "@/app/_lib/api/fetch-generated";
@@ -30,16 +31,16 @@ export function WorkoutDayCard({
   const durationInMinutes = Math.round(estimatedDurationInSeconds / 60);
 
   return (
-    <div className="relative flex h-50 w-full flex-col items-start justify-between overflow-hidden rounded-xl p-5">
+    <div className="relative flex h-50 w-full flex-col items-start justify-between overflow-hidden rounded-xl p-5 transition-all duration-200 will-change-transform group-active:scale-[0.985]">
       {coverImageUrl && (
         <Image
           src={coverImageUrl}
           alt={name}
           fill
-          className="pointer-events-none object-cover"
+          className="pointer-events-none object-cover transition-transform duration-300 group-active:scale-[1.02]"
         />
       )}
-      <div className="absolute inset-0 bg-foreground/40" />
+      <div className="absolute inset-0 bg-foreground/40 transition-colors duration-200 group-active:bg-foreground/50" />
       <div className="relative">
         <div className="flex items-center gap-1 rounded-full bg-background/16 px-2.5 py-1.5 backdrop-blur-sm">
           <Calendar className="size-3.5 text-background" />

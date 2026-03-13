@@ -1,3 +1,4 @@
+//frontend/app/_components/consistency-tracker.tsx
 import dayjs from "dayjs";
 import type { GetHomeData200ConsistencyByDay } from "@/app/_lib/api/fetch-generated";
 import { ConsistencySquare } from "./consistency-square";

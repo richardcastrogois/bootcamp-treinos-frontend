@@ -1,7 +1,8 @@
-//frontend/app/layout.tsx
+// frontend/app/layout.tsx
 import type { Metadata } from "next";
 import { Anton, Geist, Geist_Mono, Inter_Tight } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -41,6 +42,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${interTight.variable} ${anton.variable} antialiased`}
       >
         <NuqsAdapter>{children}</NuqsAdapter>
+        <Toaster />
       </body>
     </html>
   );

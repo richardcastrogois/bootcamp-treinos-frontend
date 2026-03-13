@@ -1,3 +1,4 @@
+//frontend/app/(protected)/workout-plans/[id]/days/[dayId]/_components/exercise-card.tsx
 "use client";
 
 import { CircleHelp, Zap } from "lucide-react";

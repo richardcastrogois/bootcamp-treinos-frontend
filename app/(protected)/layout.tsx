@@ -1,6 +1,7 @@
 //frontend/app/(protected)/layout.tsx
 import { Suspense } from "react";
 import { Chat } from "@/app/_components/chat";
+import { BottomNav } from "@/app/_components/bottom-nav";
 import { ProtectedAppProvider } from "./_components/protected-app-provider";
 import { getProtectedBootstrap } from "./_lib/get-protected-bootstrap";
 
@@ -15,10 +16,13 @@ export default async function ProtectedLayout({
     <ProtectedAppProvider
       activeWorkoutPlanId={homeData.activeWorkoutPlanId ?? null}
     >
-      {children}
-      <Suspense>
-        <Chat />
-      </Suspense>
+      <>
+        {children}
+        <BottomNav />
+        <Suspense>
+          <Chat />
+        </Suspense>
+      </>
     </ProtectedAppProvider>
   );
 }

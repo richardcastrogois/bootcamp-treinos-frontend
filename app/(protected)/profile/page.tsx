@@ -1,5 +1,4 @@
 //frontend/app/(protected)/profile/page.tsx
-import { BottomNav } from "@/app/_components/bottom-nav";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Weight, Ruler, BicepsFlexed, User } from "lucide-react";
 import { LogoutButton } from "./_components/logout-button";
@@ -14,7 +13,7 @@ export default async function ProfilePage() {
   const age = trainData.age;
 
   return (
-    <div className="flex min-h-svh flex-col bg-background pb-24">
+    <div className="flex min-h-svh flex-col bg-background pb-32">
       <div className="flex h-14 items-center px-5">
         <p
           className="text-[22px] uppercase leading-[1.15] text-foreground"
@@ -105,8 +104,6 @@ export default async function ProfilePage() {
 
         <LogoutButton />
       </div>
-
-      <BottomNav activePage="profile" />
     </div>
   );
 }

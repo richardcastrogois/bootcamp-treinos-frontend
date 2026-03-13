@@ -1,8 +1,10 @@
-//bootcamp-treinos-frontend/app/(protected)/workout-plans/[id]/days/[dayId]/_components/complete-workout-button.tsx
+// frontend/app/(protected)/workout-plans/[id]/days/[dayId]/_components/complete-workout-button.tsx
 "use client";
 
 import { useTransition } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { completeWorkoutAction } from "../_actions";
 
 interface CompleteWorkoutButtonProps {
@@ -20,7 +22,17 @@ export function CompleteWorkoutButton({
 
   const handleComplete = () => {
     startTransition(async () => {
-      await completeWorkoutAction(workoutPlanId, workoutDayId, sessionId);
+      try {
+        await completeWorkoutAction(workoutPlanId, workoutDayId, sessionId);
+
+        toast.success("Treino concluído", {
+          description: "Parabéns! Seu treino foi marcado como concluído.",
+        });
+      } catch {
+        toast.error("Não foi possível concluir o treino.", {
+          description: "Tente novamente em instantes.",
+        });
+      }
     });
   };
 
@@ -29,9 +41,10 @@ export function CompleteWorkoutButton({
       variant="outline"
       onClick={handleComplete}
       disabled={isPending}
-      className="w-full rounded-full py-3 font-heading text-sm font-semibold"
+      className="w-full rounded-full py-3 font-heading text-sm font-semibold transition-all duration-200 active:scale-[0.98]"
     >
-      Marcar como concluído
+      {isPending && <Spinner className="size-4" />}
+      {isPending ? "Concluindo..." : "Marcar como concluído"}
     </Button>
   );
 }

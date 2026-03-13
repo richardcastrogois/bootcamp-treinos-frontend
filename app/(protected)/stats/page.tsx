@@ -1,7 +1,6 @@
 //fronend/app/(protected)/stats/page.tsx
 import dayjs from "dayjs";
 import { CircleCheck, CirclePercent, Hourglass } from "lucide-react";
-import { BottomNav } from "@/app/_components/bottom-nav";
 import { getStats } from "@/app/_lib/api/fetch-generated";
 import { StreakBanner } from "./_components/streak-banner";
 import { StatsHeatmap } from "./_components/stats-heatmap";
@@ -37,7 +36,7 @@ export default async function StatsPage() {
   } = statsResponse.data;
 
   return (
-    <div className="flex min-h-svh flex-col bg-background pb-24">
+    <div className="flex min-h-svh flex-col bg-background pb-32">
       <div className="flex h-14 items-center px-5">
         <p
           className="text-[22px] uppercase leading-[1.15] text-foreground"
@@ -78,8 +77,6 @@ export default async function StatsPage() {
           label="Tempo Total"
         />
       </div>
-
-      <BottomNav activePage="stats" />
     </div>
   );
 }
