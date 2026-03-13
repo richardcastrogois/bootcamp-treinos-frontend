@@ -1,3 +1,4 @@
+//frontend/app/(protected)/layout.tsx
 import { Suspense } from "react";
 import { Chat } from "@/app/_components/chat";
 import { ProtectedAppProvider } from "./_components/protected-app-provider";

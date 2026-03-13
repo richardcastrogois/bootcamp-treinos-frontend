@@ -1,3 +1,4 @@
+//fronend/app/(protected)/stats/page.tsx
 import dayjs from "dayjs";
 import { CircleCheck, CirclePercent, Hourglass } from "lucide-react";
 import { BottomNav } from "@/app/_components/bottom-nav";

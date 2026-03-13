@@ -6,6 +6,88 @@
  * OpenAPI spec version: 1.0.0
  */
 import { customFetch } from "../../fetch";
+export type GetBootstrap200User = {
+  id: string;
+  name: string;
+  email: string;
+  /** @nullable */
+  image?: string | null;
+};
+
+export type GetBootstrap200HomeDataTodayWorkoutDayWeekDay =
+  (typeof GetBootstrap200HomeDataTodayWorkoutDayWeekDay)[keyof typeof GetBootstrap200HomeDataTodayWorkoutDayWeekDay];
+
+export const GetBootstrap200HomeDataTodayWorkoutDayWeekDay = {
+  MONDAY: "MONDAY",
+  TUESDAY: "TUESDAY",
+  WEDNESDAY: "WEDNESDAY",
+  THURSDAY: "THURSDAY",
+  FRIDAY: "FRIDAY",
+  SATURDAY: "SATURDAY",
+  SUNDAY: "SUNDAY",
+} as const;
+
+export type GetBootstrap200HomeDataTodayWorkoutDay = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  workoutPlanId: string;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  name: string;
+  isRest: boolean;
+  weekDay: GetBootstrap200HomeDataTodayWorkoutDayWeekDay;
+  estimatedDurationInSeconds: number;
+  coverImageUrl?: string;
+  exercisesCount: number;
+};
+
+export type GetBootstrap200HomeDataConsistencyByDay = {
+  [key: string]: {
+    workoutDayCompleted: boolean;
+    workoutDayStarted: boolean;
+  };
+};
+
+export type GetBootstrap200HomeData = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  activeWorkoutPlanId?: string;
+  todayWorkoutDay?: GetBootstrap200HomeDataTodayWorkoutDay;
+  workoutStreak: number;
+  consistencyByDay: GetBootstrap200HomeDataConsistencyByDay;
+};
+
+/**
+ * @nullable
+ */
+export type GetBootstrap200TrainData = {
+  userId: string;
+  userName: string;
+  weightInGrams: number;
+  heightInCentimeters: number;
+  age: number;
+  /**
+   * @minimum 0
+   * @maximum 100
+   */
+  bodyFatPercentage: number;
+} | null;
+
+export type GetBootstrap200 = {
+  user: GetBootstrap200User;
+  homeData: GetBootstrap200HomeData;
+  /** @nullable */
+  trainData: GetBootstrap200TrainData;
+};
+
+export type GetBootstrap401 = {
+  error: string;
+  code: string;
+};
+
+export type GetBootstrap500 = {
+  error: string;
+  code: string;
+};
+
 export type GetHomeData200TodayWorkoutDayWeekDay =
   (typeof GetHomeData200TodayWorkoutDayWeekDay)[keyof typeof GetHomeData200TodayWorkoutDayWeekDay];
 
@@ -503,6 +585,51 @@ export type UpdateWorkoutSession500 = {
 
 export type Get200 = {
   message: string;
+};
+
+/**
+ * @summary Get protected app bootstrap data
+ */
+export type getBootstrapResponse200 = {
+  data: GetBootstrap200;
+  status: 200;
+};
+
+export type getBootstrapResponse401 = {
+  data: GetBootstrap401;
+  status: 401;
+};
+
+export type getBootstrapResponse500 = {
+  data: GetBootstrap500;
+  status: 500;
+};
+
+export type getBootstrapResponseSuccess = getBootstrapResponse200 & {
+  headers: Headers;
+};
+export type getBootstrapResponseError = (
+  | getBootstrapResponse401
+  | getBootstrapResponse500
+) & {
+  headers: Headers;
+};
+
+export type getBootstrapResponse =
+  | getBootstrapResponseSuccess
+  | getBootstrapResponseError;
+
+export const getGetBootstrapUrl = () => {
+  return `/bootstrap/`;
+};
+
+export const getBootstrap = async (
+  options?: RequestInit,
+): Promise<getBootstrapResponse> => {
+  return customFetch<getBootstrapResponse>(getGetBootstrapUrl(), {
+    ...options,
+    method: "GET",
+  });
 };
 
 /**

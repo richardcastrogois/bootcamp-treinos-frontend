@@ -1,3 +1,4 @@
+//frontend/orval.config.ts
 import { defineConfig } from "orval";
 import "dotenv/config";
 

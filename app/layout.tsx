@@ -1,3 +1,4 @@
+//frontend/app/layout.tsx
 import type { Metadata } from "next";
 import { Anton, Geist, Geist_Mono, Inter_Tight } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";

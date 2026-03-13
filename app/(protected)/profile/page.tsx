@@ -1,3 +1,4 @@
+//frontend/app/(protected)/profile/page.tsx
 import { BottomNav } from "@/app/_components/bottom-nav";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Weight, Ruler, BicepsFlexed, User } from "lucide-react";

@@ -1,106 +1,73 @@
+//frontend/app/(protected)/_lib/get-protected-bootstrap.ts
 import { cache } from "react";
-import dayjs from "dayjs";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { authClient } from "@/app/_lib/auth-client";
 import {
-  getHomeData,
-  getUserTrainData,
-  type GetHomeData200,
-  type GetUserTrainData200,
+  getBootstrap,
+  type GetBootstrap200,
 } from "@/app/_lib/api/fetch-generated";
 
-type NonNullableTrainData = NonNullable<GetUserTrainData200>;
+type NonNullableTrainData = NonNullable<GetBootstrap200["trainData"]>;
 
 type ProtectedBootstrap = {
-  user: NonNullable<
-    Awaited<ReturnType<typeof authClient.getSession>>["data"]
-  >["user"];
+  user: GetBootstrap200["user"];
   today: string;
-  homeData: GetHomeData200;
+  homeData: GetBootstrap200["homeData"];
   trainData: NonNullableTrainData;
 };
 
+const BOOTSTRAP_DEBUG_ENABLED =
+  process.env.NEXT_PUBLIC_DEBUG_BOOTSTRAP === "true";
+
+function debugLog(message: string, ...args: unknown[]) {
+  if (!BOOTSTRAP_DEBUG_ENABLED) return;
+  console.log(`[bootstrap] ${message}`, ...args);
+}
+
+function debugError(message: string, error: unknown) {
+  if (!BOOTSTRAP_DEBUG_ENABLED) return;
+  console.error(`[bootstrap] ${message}`, error);
+}
+
 export const getProtectedBootstrap = cache(
   async (): Promise<ProtectedBootstrap> => {
-    console.log("[bootstrap] start");
+    debugLog("start");
 
-    let session: Awaited<ReturnType<typeof authClient.getSession>> | undefined =
-      undefined;
-
-    try {
-      console.log("[bootstrap] fetching session...");
-      session = await authClient.getSession({
-        fetchOptions: {
-          headers: await headers(),
-        },
-      });
-      console.log("[bootstrap] session fetched");
-    } catch (error) {
-      console.error("[bootstrap] session fetch failed:", error);
-      throw error;
-    }
-
-    if (!session.data?.user) {
-      console.log("[bootstrap] no user, redirecting to /auth");
-      redirect("/auth");
-    }
-
-    const today = dayjs().format("YYYY-MM-DD");
-
-    let homeDataResponse: Awaited<ReturnType<typeof getHomeData>> | undefined =
-      undefined;
-
-    try {
-      console.log("[bootstrap] fetching home data...");
-      homeDataResponse = await getHomeData(today);
-      console.log("[bootstrap] home data fetched:", homeDataResponse.status);
-    } catch (error) {
-      console.error("[bootstrap] home data fetch failed:", error);
-      throw error;
-    }
-
-    if (homeDataResponse.status !== 200) {
-      throw new Error("Failed to fetch home data");
-    }
-
-    let trainDataResponse:
-      | Awaited<ReturnType<typeof getUserTrainData>>
+    let bootstrapResponse:
+      | Awaited<ReturnType<typeof getBootstrap>>
       | undefined = undefined;
 
     try {
-      console.log("[bootstrap] fetching user train data...");
-      trainDataResponse = await getUserTrainData();
-      console.log(
-        "[bootstrap] user train data fetched:",
-        trainDataResponse.status,
-      );
+      debugLog("fetching bootstrap...");
+      bootstrapResponse = await getBootstrap();
+      debugLog("bootstrap fetched:", bootstrapResponse.status);
     } catch (error) {
-      console.error("[bootstrap] user train data fetch failed:", error);
+      debugError("bootstrap fetch failed:", error);
       throw error;
     }
 
-    if (trainDataResponse.status !== 200) {
-      throw new Error("Failed to fetch user train data");
+    if (bootstrapResponse.status === 401) {
+      debugLog("no user, redirecting to /auth");
+      redirect("/auth");
     }
 
-    const homeData = homeDataResponse.data;
-    const trainData = trainDataResponse.data;
+    if (bootstrapResponse.status !== 200) {
+      throw new Error("Failed to fetch bootstrap data");
+    }
+
+    const { user, homeData, trainData } = bootstrapResponse.data;
 
     const needsOnboarding = !homeData.activeWorkoutPlanId || !trainData;
 
     if (needsOnboarding) {
-      console.log(
-        "[bootstrap] onboarding required, redirecting to /onboarding",
-      );
+      debugLog("onboarding required, redirecting to /onboarding");
       redirect("/onboarding");
     }
 
-    console.log("[bootstrap] done");
+    debugLog("done");
 
     return {
-      user: session.data.user,
-      today,
+      user,
+      today: new Date().toISOString().slice(0, 10),
       homeData,
       trainData,
     };

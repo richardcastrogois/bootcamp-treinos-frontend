@@ -1,3 +1,4 @@
+//frontend/app/(protected)/workout-plans/[id]/page.tsx
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";

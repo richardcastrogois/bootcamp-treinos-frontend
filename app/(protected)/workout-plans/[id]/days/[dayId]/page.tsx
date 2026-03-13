@@ -1,3 +1,4 @@
+//frontend/app/(protected)/workout-plans/[id]/days/[dayId]/page.tsx
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import { Calendar, Timer, Dumbbell } from "lucide-react";
