@@ -1,3 +1,4 @@
+//frontend/(protected)/workout-plans/[id]/days/[dayId]/_actions.ts
 "use server";
 
 import { revalidatePath } from "next/cache";

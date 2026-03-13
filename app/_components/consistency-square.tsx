@@ -1,3 +1,4 @@
+//frontend/src/app/_components/consistency-square.tsx
 interface ConsistencySquareProps {
   completed: boolean;
   started: boolean;

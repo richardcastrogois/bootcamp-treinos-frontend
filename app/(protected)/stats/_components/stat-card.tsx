@@ -1,3 +1,4 @@
+//frontend/(protected)/stats/_components/stat-card.tsx
 import type { LucideIcon } from "lucide-react";
 
 interface StatCardProps {

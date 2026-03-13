@@ -1,3 +1,4 @@
+//frontend/(protected)/stats/_components/streak-banner.tsx
 import Image from "next/image";
 import { Flame } from "lucide-react";
 

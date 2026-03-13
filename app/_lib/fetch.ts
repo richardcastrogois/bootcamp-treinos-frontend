@@ -1,3 +1,4 @@
+//frontend/app/_lib/fetch.ts
 import { cookies } from "next/headers";
 
 const getBody = async <T>(response: Response): Promise<T> => {

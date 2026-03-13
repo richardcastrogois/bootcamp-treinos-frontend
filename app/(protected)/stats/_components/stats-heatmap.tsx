@@ -1,3 +1,4 @@
+//frontend/(protected)/stats/_components/stats-heatmap.tsx
 import dayjs from "dayjs";
 import type { GetStats200ConsistencyByDay } from "@/app/_lib/api/fetch-generated";
 
